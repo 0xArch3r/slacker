@@ -40,6 +40,8 @@ type MessageEvent struct {
 	// BotID of the bot that sent this message. If a bot did not send this
 	// message, this will be an empty string.
 	BotID string
+	
+	Event interface{}
 }
 
 // IsThread indicates if a message event took place in a thread.
