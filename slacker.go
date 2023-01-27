@@ -470,6 +470,7 @@ func newMessageEvent(slacker *Slacker, evt interface{}, req *socketmode.Request)
 			UserName:    ev.UserName,
 			Text:        fmt.Sprintf("%s %s", ev.Command[1:], ev.Text),
 			Data:        req,
+			Event:       evt,
 			Type:        req.Type,
 		}
 	}
