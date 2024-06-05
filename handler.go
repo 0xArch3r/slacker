@@ -15,7 +15,7 @@ type InteractionMiddlewareHandler func(InteractionHandler) InteractionHandler
 type SuggestionMiddlewareHandler func(SuggestionHandler) SuggestionHandler
 
 // InteractionHandler represents the interaction handler function
-type InteractionHandler func(*InteractionContext)
+type InteractionHandler func(sm socketmode.Event, ic *InteractionContext)
 
 // SuggestionHandler represents the interaction handler function for block_suggestion
 type SuggestionHandler func(sm socketmode.Event, ic *InteractionContext)
