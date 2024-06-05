@@ -7,7 +7,7 @@ require (
 	github.com/shomali11/commander v0.0.0-20230730023802-0b64f620037d
 	github.com/shomali11/proper v0.0.0-20190608032528-6e70a05688e7
 	github.com/shomali11/slacker/v2 v2.0.0-alpha4
-	github.com/slack-go/slack v0.12.3
+	github.com/slack-go/slack v0.12.5
 )
 
 require (
