@@ -14,7 +14,7 @@ func executeCommand(ctx *CommandContext, handler CommandHandler, middlewares ...
 	handler(ctx)
 }
 
-func executeInteraction(ctx *InteractionContext, handler InteractionHandler, middlewares ...InteractionMiddlewareHandler) {
+func executeInteraction(event *socketmode.Event, ctx *InteractionContext, handler InteractionHandler, middlewares ...InteractionMiddlewareHandler) {
 	if handler == nil {
 		return
 	}
@@ -23,7 +23,7 @@ func executeInteraction(ctx *InteractionContext, handler InteractionHandler, mid
 		handler = middlewares[i](handler)
 	}
 
-	handler(ctx)
+	handler(*event, ctx)
 }
 
 func executeSuggestion(socketEvent socketmode.Event, ctx *InteractionContext, handler SuggestionHandler, middlewares ...SuggestionMiddlewareHandler) {

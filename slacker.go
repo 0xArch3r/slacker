@@ -320,9 +320,8 @@ func (s *Slacker) Listen(ctx context.Context) error {
 						continue
 					default:
 						// Acknowledge receiving the request
-						s.socketModeClient.Ack(*socketEvent.Request)
-
-						go s.handleInteractionEvent(ctx, &callback)
+						//s.socketModeClient.Ack(*socketEvent.Request)
+						go s.handleInteractionEvent(ctx, &socketEvent, &callback)
 					}
 					//! Adding Custom Code to Allow for Block Suggestion Processing
 
@@ -448,7 +447,7 @@ func (s *Slacker) startCronJobs(ctx context.Context) {
 	s.cronClient.Start()
 }
 
-func (s *Slacker) handleInteractionEvent(ctx context.Context, callback *slack.InteractionCallback) {
+func (s *Slacker) handleInteractionEvent(ctx context.Context, event *socketmode.Event, callback *slack.InteractionCallback) {
 	middlewares := make([]InteractionMiddlewareHandler, 0)
 	middlewares = append(middlewares, s.interactionMiddlewares...)
 
@@ -462,14 +461,15 @@ func (s *Slacker) handleInteractionEvent(ctx context.Context, callback *slack.In
 			interactionCtx := newInteractionContext(ctx, s.logger, s.slackClient, callback, definition)
 
 			middlewares = append(middlewares, definition.Middlewares...)
-			executeInteraction(interactionCtx, definition.Handler, middlewares...)
+			executeInteraction(event, interactionCtx, definition.Handler, middlewares...)
+			s.socketModeClient.Ack(*event.Request)
 			return
 		}
 	}
 
 	if s.unsupportedInteractionHandler != nil {
 		interactionCtx := newInteractionContext(ctx, s.logger, s.slackClient, callback, nil)
-		executeInteraction(interactionCtx, s.unsupportedInteractionHandler, middlewares...)
+		executeInteraction(event, interactionCtx, s.unsupportedInteractionHandler, middlewares...)
 	}
 }
 
@@ -479,7 +479,7 @@ func (s *Slacker) handleInteractionSuggestion(ctx context.Context, socketEvent *
 
 	if s.suggestionHandler != nil {
 		interactionCtx := newInteractionContext(ctx, s.logger, s.slackClient, callback, nil)
-		executeSuggestion(*socketEvent, interactionCtx, s.suggestionHandler)
+		executeSuggestion(*socketEvent, interactionCtx, s.suggestionHandler, middlewares...)
 	}
 }
 
