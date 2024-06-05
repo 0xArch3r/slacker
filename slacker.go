@@ -470,6 +470,7 @@ func (s *Slacker) handleInteractionEvent(ctx context.Context, event *socketmode.
 	if s.unsupportedInteractionHandler != nil {
 		interactionCtx := newInteractionContext(ctx, s.logger, s.slackClient, callback, nil)
 		executeInteraction(event, interactionCtx, s.unsupportedInteractionHandler, middlewares...)
+		s.socketModeClient.Ack(*event.Request)
 	}
 }
 
